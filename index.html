@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>ZoneX - Gry w Jednym Oknie</title>
+    <style>
+        body { background-color: #0d0d0d; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Pasek boczny */
+        #sidebar { width: 350px; background: #151515; border-right: 3px solid #ff4757; display: flex; flex-direction: column; z-index: 10; }
+        #sidebar h1 { color: #ff4757; padding: 20px; margin: 0; font-size: 2.5em; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
+        
+        #search { margin: 10px; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #222; color: white; outline: none; }
+        #search:focus { border-color: #ff4757; box-shadow: 0 0 5px #ff4757; }
+
+        .game-list { overflow-y: auto; flex-grow: 1; padding: 10px; scrollbar-width: thin; scrollbar-color: #ff4757 #151515; }
+        
+        /* Kategorie */
+        .category-header { 
+            color: #ff4757; font-weight: bold; font-size: 0.85em; 
+            margin: 20px 5px 8px 5px; border-bottom: 1px solid #333; padding-bottom: 5px;
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        .game-item { 
+            display: block; padding: 12px 15px; margin-bottom: 5px; background: #1e1e1e; 
+            color: #efefef; text-decoration: none; border-radius: 6px; transition: 0.2s;
+            font-size: 0.95em; border: 1px solid transparent;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .game-item:hover { background: #ff4757; color: white; transform: translateX(8px); border-color: #fff; }
+
+        /* Główne okno gry */
+        #main-content { flex-grow: 1; background: #000; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; background: #000; }
+        
+        .welcome { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center; 
+            background: #0d0d0d; color: #333; flex-direction: column; text-align: center; 
+        }
+        .welcome h2 { font-size: 4em; margin: 0; text-transform: uppercase; letter-spacing: 10px; color: #1a1a1a; }
+        .welcome p { color: #444; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h1>ZoneX</h1>
+    <input type="text" id="search" placeholder="Szukaj gry..." onkeyup="filterGames()">
+    
+    <div class="game-list" id="gameList">
+        
+        <div class="category-header">PRZETRWANIE / RELAKS</div>
+        <a href="Games/raft.html" target="gameFrame" class="game-item">Raft Survival</a>
+        <a href="Games/slowroads.html" target="gameFrame" class="game-item">Slow Roads</a>
+        <a href="Games/WebFishing.html" target="gameFrame" class="game-item">WebFishing</a>
+        <a href="Games/Slime Rancher.html" target="gameFrame" class="game-item">Slime Rancher</a>
+        <a href="Games/flappybird.html" target="gameFrame" class="game-item">Flappy Bird</a>
+        <a href="Games/Geometry Dash Lite.html" target="gameFrame" class="game-item">Geometry Dash Lite</a>
+        <a href="Games/Fruit Ninja.html" target="gameFrame" class="game-item">Fruit Ninja</a>
+        <a href="Games/Solar Smash.html" target="gameFrame" class="game-item">Solar Smash</a>
+
+        <div class="category-header">HORRORY</div>
+        <a href="Games/Amanda the Adventurer.html" target="gameFrame" class="game-item">Amanda the Adventurer</a>
+        <a href="Games/Bad Parenting 1.html" target="gameFrame" class="game-item">Bad Parenting 1</a>
+        <a href="Games/Bendy and the Ink Machine.html" target="gameFrame" class="game-item">Bendy and the Ink Machine</a>
+        <a href="Games/Five Nights at Freddy's.html" target="gameFrame" class="game-item">Five Nights at Freddy's</a>
+        <a href="Games/Five Nights at Freddy's 2.html" target="gameFrame" class="game-item">Five Nights at Freddy's 2</a>
+        <a href="Games/Five Nights at Freddy's 3.html" target="gameFrame" class="game-item">Five Nights at Freddy's 3</a>
+        <a href="Games/Five Nights at Freddy's 4.html" target="gameFrame" class="game-item">Five Nights at Freddy's 4</a>
+        <a href="Games/Granny.html" target="gameFrame" class="game-item">Granny</a>
+        <a href="Games/Granny 2.html" target="gameFrame" class="game-item">Granny 2</a>
+        <a href="Games/R.E.P.O.html" target="gameFrame" class="game-item">R.E.P.O</a>
+
+        <div class="category-header">AKCJA / SYMULATORY</div>
+        <a href="Games/Buckshot Roulette.html" target="gameFrame" class="game-item">Buckshot Roulette</a>
+        <a href="Games/Half Life.html" target="gameFrame" class="game-item">Half Life</a>
+        <a href="Games/Hotline Miami.html" target="gameFrame" class="game-item">Hotline Miami</a>
+        <a href="Games/Karlson.html" target="gameFrame" class="game-item">Karlson</a>
+        <a href="Games/Minecraft 1.12.2.html" target="gameFrame" class="game-item">Minecraft 1.12.2</a>
+        <a href="Games/People Playground.html" target="gameFrame" class="game-item">People Playground</a>
+        <a href="Games/Gorilla Tag.html" target="gameFrame" class="game-item">Gorilla Tag</a>
+        <a href="Games/BuildNow.gg.html" target="gameFrame" class="game-item">BuildNow.gg</a>
+
+        <div class="category-header">SZKOŁA / LOGICZNE</div>
+        <a href="Games/Baldi's Basics Plus.html" target="gameFrame" class="game-item">Baldi's Basics Plus</a>
+        <a href="Games/baldis-basics.html" target="gameFrame" class="game-item">Baldi's Basics Classic</a>
+        <a href="Games/Find the Alien.html" target="gameFrame" class="game-item">Find the Alien</a>
+        <a href="Games/Kindergarten.html" target="gameFrame" class="game-item">Kindergarten</a>
+        <a href="Games/Kindergarten 2.html" target="gameFrame" class="game-item">Kindergarten 2</a>
+        <a href="Games/wordle-unlimited.html" target="gameFrame" class="game-item">Wordle Unlimited</a>
+    </div>
+</div>
+
+<div id="main-content">
+    <div id="welcomeScreen" class="welcome">
+        <h2>ZoneX</h2>
+        <p>WYBIERZ GRĘ Z LISTY PO LEWEJ</p>
+    </div>
+    <iframe name="gameFrame" id="gameFrame" src="about:blank"></iframe>
+</div>
+
+<script>
+    function filterGames() {
+        let input = document.getElementById('search').value.toLowerCase();
+        let items = document.getElementsByClassName('game-item');
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].innerText.toLowerCase().includes(input)) {
+                items[i].style.display = "";
+            } else {
+                items[i].style.display = "none";
+            }
+        }
+    }
+
+    document.querySelectorAll('.game-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.getElementById('welcomeScreen').style.display = "none";
+        });
+    });
+</script>
+
+</body>
+</html>
