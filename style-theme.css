@@ -19,8 +19,8 @@
 }
 
 #theme-toggle {
-    margin: 0 10px 10px 10px;
-    padding: 12px;
+    margin: 10px;
+    padding: 15px;
     background-color: #ff4757;
     color: white;
     border: none;
@@ -28,21 +28,19 @@
     cursor: pointer;
     font-weight: bold;
     text-transform: uppercase;
-    font-size: 13px;
-    transition: 0.2s;
 }
 
-/* PRZYCISK GWIAZDKI - JAK NA TWOIM SCREENIE */
+/* PRZYCISK GWIAZDKI - STYL ZE SCREENA */
 .fav-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 42px;    /* Szerokość kwadratu */
-    height: 42px;       /* Wysokość kwadratu */
+    min-width: 45px;    /* Szerokość kwadratu */
+    height: 45px;       /* Wysokość kwadratu */
     background: rgba(0, 0, 0, 0.4); 
     color: #444;
     border-radius: 12px; 
-    margin-right: 20px;  /* ODSTĘP OD TEKSTU */
+    margin-right: 25px;  /* TWOJA PRZERWA MIĘDZY GWIAZDKĄ A TEKSTEM */
     cursor: pointer;
     transition: 0.2s;
     user-select: none;
