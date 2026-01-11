@@ -19,29 +19,38 @@
 }
 
 #theme-toggle {
-    margin: 10px; padding: 15px; background-color: #ff4757; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.2s;
+    margin: 10px;
+    padding: 15px;
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
-#theme-toggle:hover { background-color: #ff6b81; }
-
-/* PRZYCISK GWIAZDKI Z TWOIM ODSTĘPEM */
+/* PRZYCISK GWIAZDKI */
 .fav-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 45px;    
-    height: 45px;       
-    background: rgba(0, 0, 0, 0.4); 
+    min-width: 45px;
+    height: 45px;
+    background: rgba(0, 0, 0, 0.4);
     color: #444;
-    border-radius: 12px; 
-    margin-right: 25px;  /* TWOJA PRZERWA OD TEKSTU */
+    border-radius: 12px;
+    margin-right: 25px; /* ODSTĘP OD TEKSTU */
     cursor: pointer;
     transition: 0.2s;
     user-select: none;
     font-size: 1.2em;
 }
 
-.fav-btn:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
+.fav-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
 
 .fav-btn.active {
     color: #ffca28;
