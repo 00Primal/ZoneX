@@ -17,8 +17,25 @@
         
         .category-header { color: #ff4757; font-weight: bold; font-size: 0.85em; margin: 20px 5px 8px 5px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; letter-spacing: 2px; text-transform: uppercase; }
 
-        .game-item { display: flex !important; align-items: center; padding: 12px 15px; margin-bottom: 5px; background: var(--bg-item); color: var(--text-main); text-decoration: none; border-radius: 6px; transition: 0.2s; font-size: 0.95em; border: 1px solid transparent; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
-        .game-item:hover { background: #ff4757; color: white; transform: translateX(8px); border-color: #fff; }
+        /* Kafalek gry jako kontener dla dwóch przycisków */
+        .game-item { 
+            display: flex !important; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 8px 12px; 
+            margin-bottom: 5px; 
+            background: var(--bg-item); 
+            color: var(--text-main); 
+            text-decoration: none; 
+            border-radius: 6px; 
+            transition: 0.2s; 
+            font-size: 0.95em; 
+            border: 1px solid transparent; 
+            cursor: pointer;
+        }
+        .game-item:hover { background: #ff4757; color: white; transform: translateX(5px); border-color: #fff; }
+
+        .game-name { flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
 
         #main-content { flex-grow: 1; background: #000; position: relative; }
         iframe { width: 100%; height: 100%; border: none; background: #000; }
@@ -93,21 +110,18 @@
 <script>
     function filterGames() {
         let input = document.getElementById('search').value.toLowerCase();
-        let items = document.querySelectorAll('.game-list > .game-item, .game-list > .category-header');
-        
+        let items = document.querySelectorAll('.game-list > .game-item');
         items.forEach(item => {
-            if (item.classList.contains('category-header')) return;
-            if (item.innerText.toLowerCase().includes(input)) {
-                item.style.setProperty('display', 'flex', 'important');
-            } else {
-                item.style.setProperty('display', 'none', 'important');
-            }
+            let name = item.querySelector('.game-name').innerText.toLowerCase();
+            item.style.setProperty('display', name.includes(input) ? 'flex' : 'none', 'important');
         });
     }
 
     document.querySelectorAll('.game-item').forEach(item => {
-        item.addEventListener('click', () => {
-            document.getElementById('welcomeScreen').style.display = "none";
+        item.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('fav-btn')) {
+                document.getElementById('welcomeScreen').style.display = "none";
+            }
         });
     });
 </script>
