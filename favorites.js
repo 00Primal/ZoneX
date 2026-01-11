@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gameList = document.getElementById('gameList');
     
-    // Tworzenie sekcji ulubionych
     const favHeader = document.createElement('div');
     favHeader.id = 'fav-category';
     favHeader.className = 'category-header';
@@ -24,24 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const gameName = item.querySelector('.game-name').innerText.trim();
             const isFav = favorites.includes(gameName);
             
-            // Dodanie przycisku gwiazdki, jeśli nie istnieje
             if (!item.querySelector('.fav-btn')) {
                 const star = document.createElement('div');
                 star.innerHTML = '★';
                 star.className = 'fav-btn' + (isFav ? ' active' : '');
                 star.onclick = (e) => {
                     e.preventDefault();
-                    e.stopPropagation(); // Blokuje uruchomienie gry przy kliknięciu w gwiazdkę
+                    e.stopPropagation();
                     toggleFav(gameName, star);
                 };
-                item.appendChild(star);
+                item.prepend(star); // Gwiazdka idzie na lewo od tekstu
             } else {
                 item.querySelector('.fav-btn').className = 'fav-btn' + (isFav ? ' active' : '');
             }
 
             if (isFav) {
                 const clone = item.cloneNode(true);
-                // Obsługa klona
                 clone.onclick = () => item.click();
                 clone.querySelector('.fav-btn').onclick = (e) => {
                     e.preventDefault();
