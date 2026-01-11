@@ -32,32 +32,31 @@
     transition: 0.2s;
 }
 
-/* Osobny przycisk gwiazdki */
+/* PRZYCISK GWIAZDKI - JAK NA TWOIM SCREENIE */
 .fav-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    background: rgba(0, 0, 0, 0.3);
-    color: #555;
-    font-size: 1.1em;
+    min-width: 42px;    /* Szerokość kwadratu */
+    height: 42px;       /* Wysokość kwadratu */
+    background: rgba(0, 0, 0, 0.4); 
+    color: #444;
+    border-radius: 12px; 
+    margin-right: 20px;  /* ODSTĘP OD TEKSTU */
+    cursor: pointer;
     transition: 0.2s;
     user-select: none;
-    z-index: 5;
+    font-size: 1.2em;
 }
 
 .fav-btn:hover {
-    color: #ffca28;
-    background: rgba(255, 202, 40, 0.1);
-    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
 }
 
 .fav-btn.active {
     color: #ffca28;
-    background: rgba(255, 202, 40, 0.2);
-    text-shadow: 0 0 5px rgba(255, 202, 40, 0.5);
+    background: rgba(255, 202, 40, 0.15);
 }
 
 #fav-category { display: none; color: #ffca28 !important; border-bottom: 1px solid #ffca28; }
