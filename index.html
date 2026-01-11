@@ -2,50 +2,42 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>ZoneX</title>
+    <title>ZoneX - Launcher Gier</title>
     <link rel="stylesheet" href="style-theme.css">
     <style>
         body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; transition: background 0.3s; }
         
         #sidebar { width: 350px; background: var(--bg-sidebar); border-right: 3px solid #ff4757; display: flex; flex-direction: column; z-index: 10; transition: background 0.3s; }
-        #sidebar h1 { color: #ff4757; padding: 20px; margin: 0; font-size: 2.5em; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
+        #sidebar h1 { color: #ff4757; padding: 20px 20px 5px 20px; margin: 0; font-size: 2.5em; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
         
+        /* Styl licznika */
+        #game-counter { text-align: center; color: #666; font-size: 0.85em; margin-bottom: 10px; font-weight: bold; letter-spacing: 1px; }
+        #total-count { color: #ff4757; }
+
         #search { margin: 10px; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--search-bg); color: var(--text-main); outline: none; }
         #search:focus { border-color: #ff4757; box-shadow: 0 0 5px #ff4757; }
 
         .game-list { overflow-y: auto; flex-grow: 1; padding: 10px; scrollbar-width: thin; scrollbar-color: #ff4757 var(--bg-sidebar); }
-        
-        .category-header { color: #ff4757; font-weight: bold; font-size: 0.85em; margin: 20px 5px 8px 5px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; letter-spacing: 2px; text-transform: uppercase; }
+        .category-header { color: #ff4757; font-weight: bold; font-size: 0.85em; margin: 20px 5px 8px 5px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; text-transform: uppercase; }
 
-        /* Kafalek gry */
         .game-item { 
-            display: flex !important; 
-            align-items: center; 
-            padding: 10px; 
-            margin-bottom: 8px; 
-            background: var(--bg-item); 
-            color: var(--text-main); 
-            text-decoration: none; 
-            border-radius: 12px; 
-            transition: 0.2s; 
-            font-size: 1em; 
-            border: 1px solid transparent; 
-            cursor: pointer;
+            display: flex !important; align-items: center; padding: 10px; margin-bottom: 8px; 
+            background: var(--bg-item); color: var(--text-main); text-decoration: none; 
+            border-radius: 12px; transition: 0.2s; cursor: pointer; border: 1px solid transparent;
         }
         .game-item:hover { background: #ff4757; color: white; transform: translateX(5px); }
-
         .game-name { flex-grow: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         #main-content { flex-grow: 1; background: #000; position: relative; }
         iframe { width: 100%; height: 100%; border: none; background: #000; }
-        
-        .welcome { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-main); color: #333; flex-direction: column; text-align: center; transition: background 0.3s; z-index: 5; }
+        .welcome { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-main); flex-direction: column; z-index: 5; }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
     <h1>ZoneX</h1>
+    <div id="game-counter">DOSTĘPNE GRY: <span id="total-count">0</span></div>
     <button id="theme-toggle">TRYB: CIEMNY</button>
     <input type="text" id="search" placeholder="Szukaj gry..." onkeyup="filterGames()">
     
@@ -98,7 +90,7 @@
 <div id="main-content">
     <div id="welcomeScreen" class="welcome">
         <h2 style="font-size: 5em; color: var(--welcome-text); margin: 0;">ZONEX</h2>
-        <p style="color: #ff4757; font-weight: bold;">WYBIERZ GRĘ Z LISTY</p>
+        <p style="color: #ff4757; font-weight: bold; letter-spacing: 2px;">WYBIERZ GRĘ Z LISTY</p>
     </div>
     <iframe name="gameFrame" id="gameFrame" src="about:blank"></iframe>
 </div>
@@ -106,12 +98,13 @@
 <script>
     function filterGames() {
         let input = document.getElementById('search').value.toLowerCase();
-        let items = document.querySelectorAll('.game-list .game-item');
+        let items = document.querySelectorAll('.game-list > .game-item');
         items.forEach(item => {
             let name = item.querySelector('.game-name').innerText.toLowerCase();
             item.style.display = name.includes(input) ? "flex" : "none";
         });
     }
+
     document.querySelectorAll('.game-item').forEach(item => {
         item.addEventListener('click', (e) => {
             if (!e.target.closest('.fav-btn')) {
