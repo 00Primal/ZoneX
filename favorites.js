@@ -1,5 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gameList = document.getElementById('gameList');
+    
+    // 1. LICZNIK GIER
+    const totalGames = document.querySelectorAll('.game-list > .game-item').length;
+    const counterElement = document.getElementById('total-count');
+    if (counterElement) counterElement.innerText = totalGames;
+
+    // 2. SEKCOJA ULUBIONYCH
     const favHeader = document.createElement('div');
     favHeader.id = 'fav-category';
     favHeader.className = 'category-header';
@@ -13,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let favorites = JSON.parse(localStorage.getItem('zoneX_favs')) || [];
 
     function updateFavUI() {
-        const items = document.querySelectorAll('.game-list .game-item');
+        const items = document.querySelectorAll('.game-list > .game-item');
         favContainer.innerHTML = '';
         let hasFavs = false;
 
@@ -23,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const gameName = nameElement.innerText.trim();
             const isFav = favorites.includes(gameName);
 
+            // Dodaj gwiazdkę jeśli jej nie ma (tylko w głównej liście)
             if (!item.querySelector('.fav-btn')) {
                 const star = document.createElement('div');
                 star.className = 'fav-btn' + (isFav ? ' active' : '');
@@ -32,11 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.stopPropagation();
                     toggleFav(gameName, star);
                 };
-                item.prepend(star); // Gwiazdka idzie na lewo
+                item.prepend(star); // Gwiazdka na lewo
             } else {
                 item.querySelector('.fav-btn').className = 'fav-btn' + (isFav ? ' active' : '');
             }
 
+            // Kopiuj do sekcji ulubionych
             if (isFav && item.parentElement.id !== 'fav-container') {
                 const clone = item.cloneNode(true);
                 clone.onclick = () => item.click();
@@ -61,5 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('zoneX_favs', JSON.stringify(favorites));
         updateFavUI();
     }
+
     updateFavUI();
 });
