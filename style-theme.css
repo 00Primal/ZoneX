@@ -1,0 +1,32 @@
+/* Zmienne dla trybu CIEMNEGO (domyślny) */
+:root {
+    --bg-main: #0d0d0d;
+    --bg-sidebar: #151515;
+    --bg-item: #1e1e1e;
+    --text-main: #efefef;
+    --welcome-text: #1a1a1a;
+    --search-bg: #222;
+}
+
+/* Zmienne dla trybu JASNEGO */
+[data-theme="light"] {
+    --bg-main: #ffffff;
+    --bg-sidebar: #f0f0f0;
+    --bg-item: #e0e0e0;
+    --text-main: #1a1a1a;
+    --welcome-text: #cccccc;
+    --search-bg: #ffffff;
+}
+
+/* Przycisk przełącznika */
+#theme-toggle {
+    margin: 10px;
+    padding: 10px;
+    background: var(--accent-color, #ff4757);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+}
