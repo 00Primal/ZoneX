@@ -17,7 +17,7 @@
         
         .category-header { color: #ff4757; font-weight: bold; font-size: 0.85em; margin: 20px 5px 8px 5px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; letter-spacing: 2px; text-transform: uppercase; }
 
-        .game-item { display: block; padding: 12px 15px; margin-bottom: 5px; background: var(--bg-item); color: var(--text-main); text-decoration: none; border-radius: 6px; transition: 0.2s; font-size: 0.95em; border: 1px solid transparent; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .game-item { display: flex !important; align-items: center; padding: 12px 15px; margin-bottom: 5px; background: var(--bg-item); color: var(--text-main); text-decoration: none; border-radius: 6px; transition: 0.2s; font-size: 0.95em; border: 1px solid transparent; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
         .game-item:hover { background: #ff4757; color: white; transform: translateX(8px); border-color: #fff; }
 
         #main-content { flex-grow: 1; background: #000; position: relative; }
@@ -93,14 +93,16 @@
 <script>
     function filterGames() {
         let input = document.getElementById('search').value.toLowerCase();
-        let items = document.getElementsByClassName('game-item');
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].innerText.toLowerCase().includes(input)) {
-                items[i].style.display = "";
+        let items = document.querySelectorAll('.game-list > .game-item, .game-list > .category-header');
+        
+        items.forEach(item => {
+            if (item.classList.contains('category-header')) return;
+            if (item.innerText.toLowerCase().includes(input)) {
+                item.style.setProperty('display', 'flex', 'important');
             } else {
-                items[i].style.display = "none";
+                item.style.setProperty('display', 'none', 'important');
             }
-        }
+        });
     }
 
     document.querySelectorAll('.game-item').forEach(item => {
@@ -110,5 +112,6 @@
     });
 </script>
 <script src="theme.js"></script>
+<script src="favorites.js"></script>
 </body>
 </html>
