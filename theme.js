@@ -1,19 +1,17 @@
 const toggleBtn = document.getElementById('theme-toggle');
 
-// Sprawdź zapisany motyw przy starcie
-const currentTheme = localStorage.getItem('theme');
-if (currentTheme === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
+// Funkcja ustawiająca motyw
+function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    toggleBtn.innerText = theme === 'light' ? "Tryb: Jasny" : "Tryb: Ciemny";
 }
 
+// Sprawdź zapisany motyw przy starcie
+const savedTheme = localStorage.getItem('theme') || 'dark';
+setTheme(savedTheme);
+
 toggleBtn.addEventListener('click', () => {
-    let theme = document.documentElement.getAttribute('data-theme');
-    
-    if (theme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
-    }
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    setTheme(currentTheme === 'light' ? 'dark' : 'light');
 });
