@@ -36,3 +36,28 @@
     background-color: #ff6b81;
     transform: scale(0.98);
 }
+
+/* Style dla systemu ulubionych */
+.fav-btn {
+    margin-right: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #555;
+    font-size: 1.3em;
+    user-select: none;
+}
+
+.fav-btn.active {
+    color: #ffca28;
+    text-shadow: 0 0 5px rgba(255, 202, 40, 0.4);
+}
+
+#fav-category {
+    display: none;
+    color: #ffca28 !important;
+    border-bottom: 1px solid #ffca28;
+}
+
+#fav-container {
+    margin-bottom: 20px;
+}
