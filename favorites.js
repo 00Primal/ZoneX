@@ -1,12 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const gameList = document.getElementById('gameList');
     
-    // 1. LICZNIK GIER
-    const totalGames = document.querySelectorAll('.game-list > .game-item').length;
-    const counterElement = document.getElementById('total-count');
-    if (counterElement) counterElement.innerText = totalGames;
+    // LICZNIK GIER - Liczy tylko te z głównej listy (bez ulubionych)
+    const updateGameCounter = () => {
+        const total = document.querySelectorAll('.game-list > .game-item').length;
+        const display = document.getElementById('total-count');
+        if (display) display.innerText = total;
+    };
 
-    // 2. SEKCOJA ULUBIONYCH
+    // SEKCOJA ULUBIONYCH
     const favHeader = document.createElement('div');
     favHeader.id = 'fav-category';
     favHeader.className = 'category-header';
@@ -20,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let favorites = JSON.parse(localStorage.getItem('zoneX_favs')) || [];
 
     function updateFavUI() {
+        // Pobieramy wszystkie gry
         const items = document.querySelectorAll('.game-list > .game-item');
         favContainer.innerHTML = '';
         let hasFavs = false;
@@ -30,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const gameName = nameElement.innerText.trim();
             const isFav = favorites.includes(gameName);
 
-            // Dodaj gwiazdkę jeśli jej nie ma (tylko w głównej liście)
+            // Dodaj gwiazdkę jeśli jej nie ma
             if (!item.querySelector('.fav-btn')) {
                 const star = document.createElement('div');
                 star.className = 'fav-btn' + (isFav ? ' active' : '');
@@ -40,12 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.stopPropagation();
                     toggleFav(gameName, star);
                 };
-                item.prepend(star); // Gwiazdka na lewo
+                item.prepend(star); // Wstawia przed nazwę gry
             } else {
                 item.querySelector('.fav-btn').className = 'fav-btn' + (isFav ? ' active' : '');
             }
 
-            // Kopiuj do sekcji ulubionych
+            // Obsługa wyświetlania w ulubionych
             if (isFav && item.parentElement.id !== 'fav-container') {
                 const clone = item.cloneNode(true);
                 clone.onclick = () => item.click();
@@ -58,7 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 hasFavs = true;
             }
         });
+        
         favHeader.style.display = hasFavs ? 'block' : 'none';
+        updateGameCounter();
     }
 
     function toggleFav(name, btn) {
