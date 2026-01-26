@@ -2,125 +2,356 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>ZoneX | Games</title>
-    <link rel="stylesheet" href="style-theme.css">
-    <link rel="icon" type="image/png" href="../logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZoneX | Games Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; transition: background 0.3s; }
-        
-        #sidebar { width: 350px; background: var(--bg-sidebar); border-right: 3px solid #ff4757; display: flex; flex-direction: column; z-index: 10; transition: background 0.3s; }
-        #sidebar h1 { color: #ff4757; padding: 25px; margin: 0; font-size: 2.5em; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
-        
-        #search { margin: 10px; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--search-bg); color: var(--text-main); outline: none; }
-        #search:focus { border-color: #ff4757; box-shadow: 0 0 5px #ff4757; }
+        @font-face {
+            font-family: 'MinecraftLocal';
+            src: url('Minecraft.ttf') format('truetype');
+        }
 
-        .game-list { overflow-y: auto; flex-grow: 1; padding: 10px; scrollbar-width: thin; scrollbar-color: #ff4757 var(--bg-sidebar); }
-        
-        .category-header { color: #ff4757; font-weight: bold; font-size: 0.85em; margin: 20px 5px 8px 5px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; letter-spacing: 2px; text-transform: uppercase; }
+        :root {
+            --default-accent: #ff4757;
+            --accent: #ff4757;
+            --accent-glow: rgba(255, 71, 87, 0.2);
+            --bg-dark: #080808;
+            --sidebar-bg: rgba(12, 12, 15, 0.98);
+            --item-bg: rgba(255, 255, 255, 0.03);
+            --text: #e0e0e0;
+            --fav-gold: #ffc107;
+        }
+
+        ::-webkit-scrollbar { width: 0px; display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text); 
+            font-family: 'MinecraftLocal', sans-serif; 
+            margin: 0; display: flex; height: 100vh; overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        #sidebar { 
+            width: 380px; background: var(--sidebar-bg); 
+            border-right: 2px solid var(--accent); 
+            display: flex; flex-direction: column; z-index: 10;
+        }
+
+        #sidebar h1 { 
+            color: var(--accent); padding: 20px; margin: 0; font-size: 3.5em; 
+            text-align: center; text-transform: uppercase; letter-spacing: 5px;
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .settings-nav-btn {
+            margin: 10px 20px; padding: 15px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--accent); color: var(--accent); cursor: pointer;
+            text-align: center; text-transform: uppercase; font-family: inherit; transition: 0.3s;
+        }
+
+        .settings-nav-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent-glow); }
+
+        #search { 
+            margin: 10px 20px; padding: 12px; background: #111; color: #fff; 
+            border: 1px solid #222; font-family: inherit; outline: none;
+        }
+
+        .game-list { overflow-y: auto; flex-grow: 1; padding: 10px 15px; }
+
+        .category-header { 
+            color: var(--accent); font-size: 0.8em; margin: 25px 5px 10px 5px; 
+            text-transform: uppercase; border-bottom: 1px solid var(--accent); opacity: 0.6;
+        }
+
+        /* Sekcja ulubionych */
+        #fav-section { display: none; margin-bottom: 20px; }
+        #fav-section.visible { display: block; }
 
         .game-item { 
-            display: flex !important; 
-            align-items: center; 
-            padding: 10px; 
-            margin-bottom: 8px; 
-            background: var(--bg-item); 
-            color: var(--text-main); 
-            text-decoration: none; 
-            border-radius: 12px; 
-            transition: 0.2s; 
-            font-size: 1em; 
-            cursor: pointer;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 15px; margin-bottom: 6px; background: var(--item-bg); 
+            color: var(--text); text-decoration: none; border-left: 3px solid transparent; 
+            transition: 0.2s; cursor: pointer;
         }
-        .game-item:hover { background: #ff4757; color: white; transform: translateX(5px); }
 
-        .game-name { flex-grow: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .game-item:hover { 
+            background: var(--accent-glow); border-left: 3px solid var(--accent);
+            transform: translateX(5px); color: #fff;
+        }
 
-        #main-content { flex-grow: 1; background: #000; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; background: #000; }
+        .fav-star {
+            color: rgba(255, 255, 255, 0.1); font-size: 1.2em; transition: 0.2s; padding: 5px;
+        }
         
-        .welcome { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--bg-main); flex-direction: column; z-index: 5; }
+        .fav-star.active { color: var(--fav-gold) !important; text-shadow: 0 0 10px rgba(255, 193, 7, 0.4); }
+
+        /* --- OKNO GŁÓWNE --- */
+        #main-content { flex-grow: 1; background: #000; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; z-index: 2; position: relative; }
+
+        /* --- USTAWIENIA --- */
+        #settings-screen {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505; z-index: 100; flex-direction: column; align-items: center; padding-top: 50px;
+        }
+
+        .settings-container { width: 85%; max-width: 650px; }
+        .settings-container h2 { color: var(--accent); text-align: center; font-size: 3em; border-bottom: 2px solid var(--accent); margin-bottom: 30px;}
+
+        .setting-group { margin-bottom: 20px; padding: 20px; background: #111; border: 1px solid #222; }
+        .setting-group label { display: block; margin-bottom: 15px; color: var(--accent); text-transform: uppercase; }
+
+        .opt-btn {
+            padding: 10px 20px; background: #1a1a1a; color: white; border: 1px solid #333;
+            cursor: pointer; font-family: inherit; margin-right: 10px; transition: 0.2s;
+        }
+        .opt-btn:hover { border-color: var(--accent); color: var(--accent); }
+        
+        .reset-btn {
+            background: transparent; border: 1px solid #444; color: #888; padding: 5px 10px;
+            cursor: pointer; font-size: 0.7em; margin-top: 10px; transition: 0.2s; display: block;
+        }
+        .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        input[type="color"] { background: none; border: 1px solid #333; cursor: pointer; width: 100px; height: 40px; }
+        input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+        .file-label {
+            display: inline-block; padding: 10px 20px; background: #222; 
+            border: 1px dashed var(--accent); color: #fff; cursor: pointer;
+        }
+
+        .back-btn {
+            background: var(--accent); border: none; color: #000; 
+            padding: 15px 60px; cursor: pointer; font-family: inherit; 
+            font-size: 1.2em; font-weight: bold; margin-top: 30px;
+        }
     </style>
+
+    <script>
+        (function() {
+            const c = localStorage.getItem('zx_color');
+            if (c) {
+                document.documentElement.style.setProperty('--accent', c);
+                let r = parseInt(c.slice(1,3), 16), g = parseInt(c.slice(3,5), 16), b = parseInt(c.slice(5,7), 16);
+                document.documentElement.style.setProperty('--accent-glow', `rgba(${r}, ${g}, ${b}, 0.2)`);
+            }
+            const o = localStorage.getItem('zx_opacity');
+            if (o) document.documentElement.style.setProperty('--sidebar-bg', `rgba(12, 12, 15, ${o/100})`);
+        })();
+    </script>
 </head>
 <body>
 
 <div id="sidebar">
     <h1>ZoneX</h1>
-    <button id="theme-toggle">TRYB: CIEMNY</button>
-    <input type="text" id="search" placeholder="Szukaj gry..." onkeyup="filterGames()">
+    <div class="settings-nav-btn" onclick="openSettings()">⚙️ USTAWIENIA</div>
+    <input type="text" id="search" placeholder="NAMIERZ PROTOKÓŁ..." onkeyup="filterGames()">
     
     <div class="game-list" id="gameList">
+        <div id="fav-section">
+            <div class="category-header">MOJE ULUBIONE</div>
+            <div id="fav-container"></div>
+        </div>
+
         <div class="category-header">PRZETRWANIE / RELAKS</div>
-        <a href="Games/raft.html" target="gameFrame" class="game-item"><span class="game-name">Raft Survival</span></a>
-        <a href="Games/slowroads.html" target="gameFrame" class="game-item"><span class="game-name">Slow Roads</span></a>
-        <a href="Games/WebFishing.html" target="gameFrame" class="game-item"><span class="game-name">WebFishing</span></a>
-        <a href="Games/Slime Rancher.html" target="gameFrame" class="game-item"><span class="game-name">Slime Rancher</span></a>
-        <a href="Games/flappybird.html" target="gameFrame" class="game-item"><span class="game-name">Flappy Bird</span></a>
-        <a href="Games/Geometry Dash Lite.html" target="gameFrame" class="game-item"><span class="game-name">Geometry Dash Lite</span></a>
-        <a href="Games/Fruit Ninja.html" target="gameFrame" class="game-item"><span class="game-name">Fruit Ninja</span></a>
-        <a href="Games/Solar Smash.html" target="gameFrame" class="game-item"><span class="game-name">Solar Smash</span></a>
-        <a href="Games/Crossy Road.html" target="gameFrame" class="game-item"><span class="game-name">Crossy Road</span></a>
-        <a href="Games/Paper io 2.html" target="gameFrame" class="game-item"><span class="game-name">Paper.io 2</span></a>
+        <a href="Games/raft.html" target="gameFrame" class="game-item" data-id="raft"><span>Raft Survival</span><span class="fav-star" onclick="toggleFav(event, 'raft')">★</span></a>
+        <a href="Games/slowroads.html" target="gameFrame" class="game-item" data-id="slowroads"><span>Slow Roads</span><span class="fav-star" onclick="toggleFav(event, 'slowroads')">★</span></a>
+        <a href="Games/WebFishing.html" target="gameFrame" class="game-item" data-id="fishing"><span>WebFishing</span><span class="fav-star" onclick="toggleFav(event, 'fishing')">★</span></a>
+        <a href="Games/Slime Rancher.html" target="gameFrame" class="game-item" data-id="slime"><span>Slime Rancher</span><span class="fav-star" onclick="toggleFav(event, 'slime')">★</span></a>
+        <a href="Games/flappybird.html" target="gameFrame" class="game-item" data-id="flappy"><span>Flappy Bird</span><span class="fav-star" onclick="toggleFav(event, 'flappy')">★</span></a>
+        <a href="Games/Geometry Dash Lite.html" target="gameFrame" class="game-item" data-id="gd"><span>Geometry Dash Lite</span><span class="fav-star" onclick="toggleFav(event, 'gd')">★</span></a>
+        <a href="Games/Fruit Ninja.html" target="gameFrame" class="game-item" data-id="fruit"><span>Fruit Ninja</span><span class="fav-star" onclick="toggleFav(event, 'fruit')">★</span></a>
+        <a href="Games/Solar Smash.html" target="gameFrame" class="game-item" data-id="solar"><span>Solar Smash</span><span class="fav-star" onclick="toggleFav(event, 'solar')">★</span></a>
+        <a href="Games/Crossy Road.html" target="gameFrame" class="game-item" data-id="crossy"><span>Crossy Road</span><span class="fav-star" onclick="toggleFav(event, 'crossy')">★</span></a>
+        <a href="Games/Paper io 2.html" target="gameFrame" class="game-item" data-id="paper"><span>Paper.io 2</span><span class="fav-star" onclick="toggleFav(event, 'paper')">★</span></a>
 
         <div class="category-header">HORRORY</div>
-        <a href="Games/Amanda the Adventurer.html" target="gameFrame" class="game-item"><span class="game-name">Amanda the Adventurer</span></a>
-        <a href="Games/Bad Parenting 1.html" target="gameFrame" class="game-item"><span class="game-name">Bad Parenting 1</span></a>
-        <a href="Games/Bendy and the Ink Machine.html" target="gameFrame" class="game-item"><span class="game-name">Bendy and the Ink Machine</span></a>
-        <a href="Games/Five Nights at Freddy's.html" target="gameFrame" class="game-item"><span class="game-name">Five Nights at Freddy's</span></a>
-        <a href="Games/Five Nights at Freddy's 2.html" target="gameFrame" class="game-item"><span class="game-name">Five Nights at Freddy's 2</span></a>
-        <a href="Games/Five Nights at Freddy's 3.html" target="gameFrame" class="game-item"><span class="game-name">Five Nights at Freddy's 3</span></a>
-        <a href="Games/Five Nights at Freddy's 4.html" target="gameFrame" class="game-item"><span class="game-name">Five Nights at Freddy's 4</span></a>
-        <a href="Games/Granny.html" target="gameFrame" class="game-item"><span class="game-name">Granny</span></a>
-        <a href="Games/Granny 2.html" target="gameFrame" class="game-item"><span class="game-name">Granny 2</span></a>
-        <a href="Games/R.E.P.O.html" target="gameFrame" class="game-item"><span class="game-name">R.E.P.O</span></a>
+        <a href="Games/Amanda the Adventurer.html" target="gameFrame" class="game-item" data-id="amanda"><span>Amanda the Adventurer</span><span class="fav-star" onclick="toggleFav(event, 'amanda')">★</span></a>
+        <a href="Games/Bad Parenting 1.html" target="gameFrame" class="game-item" data-id="badparenting"><span>Bad Parenting 1</span><span class="fav-star" onclick="toggleFav(event, 'badparenting')">★</span></a>
+        <a href="Games/Bendy and the Ink Machine.html" target="gameFrame" class="game-item" data-id="bendy"><span>Bendy and the Ink Machine</span><span class="fav-star" onclick="toggleFav(event, 'bendy')">★</span></a>
+        <a href="Games/Five Nights at Freddy's.html" target="gameFrame" class="game-item" data-id="fnaf1"><span>Five Nights at Freddy's</span><span class="fav-star" onclick="toggleFav(event, 'fnaf1')">★</span></a>
+        <a href="Games/Five Nights at Freddy's 2.html" target="gameFrame" class="game-item" data-id="fnaf2"><span>Five Nights at Freddy's 2</span><span class="fav-star" onclick="toggleFav(event, 'fnaf2')">★</span></a>
+        <a href="Games/Five Nights at Freddy's 3.html" target="gameFrame" class="game-item" data-id="fnaf3"><span>Five Nights at Freddy's 3</span><span class="fav-star" onclick="toggleFav(event, 'fnaf3')">★</span></a>
+        <a href="Games/Five Nights at Freddy's 4.html" target="gameFrame" class="game-item" data-id="fnaf4"><span>Five Nights at Freddy's 4</span><span class="fav-star" onclick="toggleFav(event, 'fnaf4')">★</span></a>
+        <a href="Games/Granny.html" target="gameFrame" class="game-item" data-id="granny1"><span>Granny</span><span class="fav-star" onclick="toggleFav(event, 'granny1')">★</span></a>
+        <a href="Games/Granny 2.html" target="gameFrame" class="game-item" data-id="granny2"><span>Granny 2</span><span class="fav-star" onclick="toggleFav(event, 'granny2')">★</span></a>
+        <a href="Games/R.E.P.O.html" target="gameFrame" class="game-item" data-id="repo"><span>R.E.P.O</span><span class="fav-star" onclick="toggleFav(event, 'repo')">★</span></a>
 
         <div class="category-header">AKCJA / SYMULATORY</div>
-        <a href="Games/Buckshot Roulette.html" target="gameFrame" class="game-item"><span class="game-name">Buckshot Roulette</span></a>
-        <a href="Games/Half Life.html" target="gameFrame" class="game-item"><span class="game-name">Half Life</span></a>
-        <a href="Games/Hotline Miami.html" target="gameFrame" class="game-item"><span class="game-name">Hotline Miami</span></a>
-        <a href="Games/Karlson.html" target="gameFrame" class="game-item"><span class="game-name">Karlson</span></a>
-        <a href="Games/Minecraft 1.12.2.html" target="gameFrame" class="game-item"><span class="game-name">Minecraft 1.12.2</span></a>
-        <a href="Games/People Playground.html" target="gameFrame" class="game-item"><span class="game-name">People Playground</span></a>
-        <a href="Games/Gorilla Tag.html" target="gameFrame" class="game-item"><span class="game-name">Gorilla Tag</span></a>
-        <a href="Games/BuildNow.gg.html" target="gameFrame" class="game-item"><span class="game-name">BuildNow.gg</span></a>
-        <a href="Games/bloxd.io.html" target="gameFrame" class="game-item"><span class="game-name">Bloxd.io</span></a>
-        <a href="Games/Superhot.html" target="gameFrame" class="game-item"><span class="game-name">Superhot</span></a>
+        <a href="Games/Buckshot Roulette.html" target="gameFrame" class="game-item" data-id="buckshot"><span>Buckshot Roulette</span><span class="fav-star" onclick="toggleFav(event, 'buckshot')">★</span></a>
+        <a href="Games/Half Life.html" target="gameFrame" class="game-item" data-id="halflife"><span>Half Life</span><span class="fav-star" onclick="toggleFav(event, 'halflife')">★</span></a>
+        <a href="Games/Hotline Miami.html" target="gameFrame" class="game-item" data-id="hotline"><span>Hotline Miami</span><span class="fav-star" onclick="toggleFav(event, 'hotline')">★</span></a>
+        <a href="Games/Karlson.html" target="gameFrame" class="game-item" data-id="karlson"><span>Karlson</span><span class="fav-star" onclick="toggleFav(event, 'karlson')">★</span></a>
+        <a href="Games/Minecraft 1.12.2.html" target="gameFrame" class="game-item" data-id="mc112"><span>Minecraft 1.12.2</span><span class="fav-star" onclick="toggleFav(event, 'mc112')">★</span></a>
+        <a href="Games/People Playground.html" target="gameFrame" class="game-item" data-id="pp"><span>People Playground</span><span class="fav-star" onclick="toggleFav(event, 'pp')">★</span></a>
+        <a href="Games/Gorilla Tag.html" target="gameFrame" class="game-item" data-id="gorilla"><span>Gorilla Tag</span><span class="fav-star" onclick="toggleFav(event, 'gorilla')">★</span></a>
+        <a href="Games/BuildNow.gg.html" target="gameFrame" class="game-item" data-id="buildnow"><span>BuildNow.gg</span><span class="fav-star" onclick="toggleFav(event, 'buildnow')">★</span></a>
+        <a href="Games/bloxd.io.html" target="gameFrame" class="game-item" data-id="bloxd"><span>Bloxd.io</span><span class="fav-star" onclick="toggleFav(event, 'bloxd')">★</span></a>
+        <a href="Games/Superhot.html" target="gameFrame" class="game-item" data-id="superhot"><span>Superhot</span><span class="fav-star" onclick="toggleFav(event, 'superhot')">★</span></a>
 
         <div class="category-header">SZKOŁA / LOGICZNE</div>
-        <a href="Games/Baldi's Basics Plus.html" target="gameFrame" class="game-item"><span class="game-name">Baldi's Basics Plus</span></a>
-        <a href="Games/baldis-basics.html" target="gameFrame" class="game-item"><span class="game-name">Baldi's Basics Classic</span></a>
-        <a href="Games/Find the Alien.html" target="gameFrame" class="game-item"><span class="game-name">Find the Alien</span></a>
-        <a href="Games/Kindergarten.html" target="gameFrame" class="game-item"><span class="game-name">Kindergarten</span></a>
-        <a href="Games/Kindergarten 2.html" target="gameFrame" class="game-item"><span class="game-name">Kindergarten 2</span></a>
-        <a href="Games/wordle-unlimited.html" target="gameFrame" class="game-item"><span class="game-name">Wordle Unlimited</span></a>
+        <a href="Games/Baldi's Basics Plus.html" target="gameFrame" class="game-item" data-id="baldiplus"><span>Baldi's Basics Plus</span><span class="fav-star" onclick="toggleFav(event, 'baldiplus')">★</span></a>
+        <a href="Games/baldis-basics.html" target="gameFrame" class="game-item" data-id="baldiclassic"><span>Baldi's Basics Classic</span><span class="fav-star" onclick="toggleFav(event, 'baldiclassic')">★</span></a>
+        <a href="Games/Find the Alien.html" target="gameFrame" class="game-item" data-id="alien"><span>Find the Alien</span><span class="fav-star" onclick="toggleFav(event, 'alien')">★</span></a>
+        <a href="Games/Kindergarten.html" target="gameFrame" class="game-item" data-id="kg1"><span>Kindergarten</span><span class="fav-star" onclick="toggleFav(event, 'kg1')">★</span></a>
+        <a href="Games/Kindergarten 2.html" target="gameFrame" class="game-item" data-id="kg2"><span>Kindergarten 2</span><span class="fav-star" onclick="toggleFav(event, 'kg2')">★</span></a>
+        <a href="Games/wordle-unlimited.html" target="gameFrame" class="game-item" data-id="wordle"><span>Wordle Unlimited</span><span class="fav-star" onclick="toggleFav(event, 'wordle')">★</span></a>
     </div>
 </div>
 
 <div id="main-content">
-    <div id="welcomeScreen" class="welcome">
-        <h2 style="font-size: 5em; color: var(--welcome-text); margin: 0;">ZONEX</h2>
-        <p style="color: #ff4757; font-weight: bold;">WYBIERZ GRĘ Z LISTY</p>
+    <div id="settings-screen">
+        <div class="settings-container">
+            <h2>KONFIGURACJA</h2>
+            <div class="setting-group">
+                <label>Styl Czcionki</label>
+                <button class="opt-btn" onclick="applyFont('MinecraftLocal')">Minecraft</button>
+                <button class="opt-btn" onclick="applyFont('Rajdhani')">Rajdhani</button>
+                <label class="file-label" for="fUpload">📁 WGRAJ CZCIONKĘ (.TTF)</label>
+                <input type="file" id="fUpload" accept=".ttf,.otf" style="display:none" onchange="uploadFont(this)">
+            </div>
+            <div class="setting-group">
+                <label>Główny Kolor</label>
+                <input type="color" id="cp" value="#ff4757" oninput="applyColor(this.value)">
+                <button class="reset-btn" onclick="resetColor()">RESETUJ DO CZERWONEGO</button>
+            </div>
+            <div class="setting-group">
+                <label>Przezroczystość Sidebaru</label>
+                <input type="range" id="op" min="10" max="100" value="98" oninput="applyOpacity(this.value)">
+            </div>
+            <center><button class="back-btn" onclick="closeSettings()">ZASTOSUJ</button></center>
+        </div>
     </div>
     <iframe name="gameFrame" id="gameFrame" src="about:blank"></iframe>
 </div>
 
 <script>
+    function openSettings() {
+        document.getElementById('gameFrame').style.display = "none";
+        document.getElementById('settings-screen').style.display = "flex";
+    }
+
+    function closeSettings() {
+        document.getElementById('settings-screen').style.display = "none";
+        document.getElementById('gameFrame').style.display = "block";
+    }
+
+    function applyColor(color) {
+        document.documentElement.style.setProperty('--accent', color);
+        let r = parseInt(color.slice(1,3), 16), g = parseInt(color.slice(3,5), 16), b = parseInt(color.slice(5,7), 16);
+        document.documentElement.style.setProperty('--accent-glow', `rgba(${r}, ${g}, ${b}, 0.2)`);
+        localStorage.setItem('zx_color', color);
+        document.getElementById('cp').value = color;
+    }
+
+    function resetColor() {
+        applyColor("#ff4757");
+    }
+
+    function applyFont(fontName) {
+        document.body.style.fontFamily = fontName + ', sans-serif';
+        localStorage.setItem('zx_font_choice', fontName);
+    }
+
+    function uploadFont(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const fontData = e.target.result;
+                const newFont = new FontFace('CustomUserFont', `url(${fontData})`);
+                newFont.load().then(loaded => {
+                    document.fonts.add(loaded);
+                    document.body.style.fontFamily = 'CustomUserFont, sans-serif';
+                    localStorage.setItem('zx_custom_font_data', fontData);
+                    localStorage.setItem('zx_font_choice', 'CustomUserFont');
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function applyOpacity(val) {
+        document.documentElement.style.setProperty('--sidebar-bg', `rgba(12, 12, 15, ${val/100})`);
+        localStorage.setItem('zx_opacity', val);
+    }
+
+    function toggleFav(e, id) {
+        e.preventDefault(); e.stopPropagation();
+        let favs = JSON.parse(localStorage.getItem('zx_favs') || '[]');
+        
+        if (favs.includes(id)) {
+            favs = favs.filter(f => f !== id);
+        } else {
+            favs.push(id);
+        }
+        
+        localStorage.setItem('zx_favs', JSON.stringify(favs));
+        updateFavUI();
+    }
+
+    function updateFavUI() {
+        const favs = JSON.parse(localStorage.getItem('zx_favs') || '[]');
+        const container = document.getElementById('fav-container');
+        const section = document.getElementById('fav-section');
+        
+        // Czyścimy gwiazdki wszędzie
+        document.querySelectorAll('.fav-star').forEach(s => s.classList.remove('active'));
+        
+        container.innerHTML = '';
+        
+        if (favs.length > 0) {
+            section.classList.add('visible');
+            favs.forEach(id => {
+                // Aktywujemy gwiazdki na głównej liście
+                const mainItems = document.querySelectorAll(`.game-item[data-id="${id}"]`);
+                mainItems.forEach(item => {
+                    item.querySelector('.fav-star').classList.add('active');
+                });
+
+                // Klonujemy do sekcji ulubionych
+                if (mainItems.length > 0) {
+                    const clone = mainItems[0].cloneNode(true);
+                    // Musimy na nowo przypisać event, bo cloneNode nie kopiuje event listenerów z JS
+                    clone.querySelector('.fav-star').onclick = (e) => toggleFav(e, id);
+                    container.appendChild(clone);
+                }
+            });
+        } else {
+            section.classList.remove('visible');
+        }
+    }
+
+    window.onload = () => {
+        const c = localStorage.getItem('zx_color'), o = localStorage.getItem('zx_opacity'), f = localStorage.getItem('zx_font_choice'), custom = localStorage.getItem('zx_custom_font_data');
+        if (c) applyColor(c);
+        if (o) { applyOpacity(o); document.getElementById('op').value = o; }
+        if (custom) {
+            const newFont = new FontFace('CustomUserFont', `url(${custom})`);
+            newFont.load().then(loaded => {
+                document.fonts.add(loaded);
+                if (f === 'CustomUserFont') document.body.style.fontFamily = 'CustomUserFont, sans-serif';
+            });
+        }
+        if (f && f !== 'CustomUserFont') applyFont(f);
+        
+        updateFavUI();
+    };
+
     function filterGames() {
         let input = document.getElementById('search').value.toLowerCase();
-        let items = document.querySelectorAll('.game-list .game-item');
-        items.forEach(item => {
-            let name = item.querySelector('.game-name').innerText.toLowerCase();
-            item.style.display = name.includes(input) ? "flex" : "none";
+        document.querySelectorAll('.game-item').forEach(item => {
+            item.style.display = item.innerText.toLowerCase().includes(input) ? "flex" : "none";
         });
     }
-    document.querySelectorAll('.game-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            if (!e.target.closest('.fav-btn')) {
-                document.getElementById('welcomeScreen').style.display = "none";
-            }
-        });
+
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.game-item')) closeSettings();
     });
 </script>
-<script src="theme.js"></script>
-<script src="favorites.js"></script>
 </body>
 </html>
