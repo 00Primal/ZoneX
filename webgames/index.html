@@ -33,7 +33,6 @@
             margin: 0; display: flex; height: 100vh; overflow: hidden;
         }
 
-        /* --- SIDEBAR --- */
         #sidebar { 
             width: 380px; background: var(--sidebar-bg); 
             border-right: 2px solid var(--accent); 
@@ -66,7 +65,6 @@
             text-transform: uppercase; border-bottom: 1px solid var(--accent); opacity: 0.6;
         }
 
-        /* Sekcja ulubionych */
         #fav-section { display: none; margin-bottom: 20px; }
         #fav-section.visible { display: block; }
 
@@ -88,11 +86,9 @@
         
         .fav-star.active { color: var(--fav-gold) !important; text-shadow: 0 0 10px rgba(255, 193, 7, 0.4); }
 
-        /* --- OKNO GŁÓWNE --- */
         #main-content { flex-grow: 1; background: #000; position: relative; }
         iframe { width: 100%; height: 100%; border: none; z-index: 2; position: relative; }
 
-        /* --- USTAWIENIA --- */
         #settings-screen {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #050505; z-index: 100; flex-direction: column; align-items: center; padding-top: 50px;
@@ -145,6 +141,21 @@
     </script>
 </head>
 <body>
+
+    <div id="mobile-block" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; color:#ff4757; z-index:999999; font-family:sans-serif; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px;">
+    <div style="border:2px solid #ff4757; padding:30px; border-radius:15px; box-shadow:0 0 20px rgba(255,71,87,0.4);">
+        <span style="font-size:50px;">⌨️</span>
+        <h1 style="margin:15px 0;">WYMAGANY KOMPUTER</h1>
+        <p style="color:#ccc;">Ta strona nie działa na telefonach.<br>Wbij na PC/Laptopie</p>
+    </div>
+</div>
+
+<script>
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        document.getElementById('mobile-block').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+</script>
 
 <div id="sidebar">
     <h1>ZoneX</h1>
