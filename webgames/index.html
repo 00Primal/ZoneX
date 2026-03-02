@@ -307,7 +307,6 @@
         const container = document.getElementById('fav-container');
         const section = document.getElementById('fav-section');
         
-        // Czyścimy gwiazdki wszędzie
         document.querySelectorAll('.fav-star').forEach(s => s.classList.remove('active'));
         
         container.innerHTML = '';
@@ -315,16 +314,13 @@
         if (favs.length > 0) {
             section.classList.add('visible');
             favs.forEach(id => {
-                // Aktywujemy gwiazdki na głównej liście
                 const mainItems = document.querySelectorAll(`.game-item[data-id="${id}"]`);
                 mainItems.forEach(item => {
                     item.querySelector('.fav-star').classList.add('active');
                 });
 
-                // Klonujemy do sekcji ulubionych
                 if (mainItems.length > 0) {
                     const clone = mainItems[0].cloneNode(true);
-                    // Musimy na nowo przypisać event, bo cloneNode nie kopiuje event listenerów z JS
                     clone.querySelector('.fav-star').onclick = (e) => toggleFav(e, id);
                     container.appendChild(clone);
                 }
