@@ -91,10 +91,33 @@
         iframe { width: 100%; height: 100%; border: none; z-index: 2; position: relative; }
 
         #settings-screen {
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050505; z-index: 100; flex-direction: column; align-items: center; padding-top: 50px;
-        }
+        display: none; 
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%;
+        background: #050505; 
+        z-index: 100; 
+        flex-direction: column; 
+        align-items: center; 
+    
+        /* Zmiany poniżej: */
+        padding: 50px 0;    /* 50px odstępu na górze i na dole */
+        overflow-y: auto;   /* Włącza pionowy pasek przewijania */
+    }
 
+/* Ponieważ wcześniej ukryłeś wszystkie scrollbary, 
+   musisz go "odblokować" tylko dla tego jednego okna: */
+    #settings-screen::-webkit-scrollbar {
+         display: block;
+         width: 8px;
+    }
+
+    #settings-screen::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 10px;
+    }
         .settings-container { width: 85%; max-width: 650px; }
         .settings-container h2 { color: var(--accent); text-align: center; font-size: 3em; border-bottom: 2px solid var(--accent); margin-bottom: 30px;}
 
